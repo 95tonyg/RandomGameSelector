@@ -19,6 +19,11 @@ namespace RandomGameSelector.Controllers
             _context = context;
         }
 
+        public List<Genre> GetGenres()
+        {
+            return _context.Genre.ToList();
+        }
+
         // GET: Games
         public async Task<IActionResult> ListPage()
         {
@@ -47,26 +52,33 @@ namespace RandomGameSelector.Controllers
             return View(game);
         }
 
-        // GET: Games/Create
+        // GET: Games/Edit
         public IActionResult Create()
         {
-            return View();
+            GameGenres gameGenres = new GameGenres();
+            gameGenres.Genres = GetGenres();
+            return View("Edit", gameGenres);
         }
 
-        // POST: Games/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
+        //GET: Games/CreateGenre
+        public IActionResult CreateGenre()
+        {
+            return View("Genre");
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] Game game)
+
+        public async Task<IActionResult> CreateGenre([Bind("Id,Name")] Genre genre)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(game);
+                _context.Add(genre);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(ListPage));
             }
-            return View(game);
+            return View(genre);
         }
 
         // GET: Games/Edit/{Id}
@@ -82,7 +94,11 @@ namespace RandomGameSelector.Controllers
             {
                 return NotFound();
             }
-            return View(game);
+
+            GameGenres gameGenres = new GameGenres();
+            gameGenres.Game = game;
+            gameGenres.Genres = GetGenres();
+            return View(gameGenres);
         }
 
         // POST: Games/Edit/{Id}
@@ -117,7 +133,16 @@ namespace RandomGameSelector.Controllers
                 }
                 return RedirectToAction(nameof(ListPage));
             }
-            return View(game);
+            else if(id == 0 && game.Name != null)
+            {
+                _context.Add(game);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(ListPage));
+            }
+            GameGenres gameGenres = new GameGenres();
+            gameGenres.Game = game;
+            gameGenres.Genres = GetGenres();
+            return View(gameGenres);
         }
 
         // GET: Games/Delete/{Id}
@@ -135,7 +160,10 @@ namespace RandomGameSelector.Controllers
                 return NotFound();
             }
 
-            return View(game);
+            GameGenres gameGenres = new GameGenres();
+            gameGenres.Game = game;
+            gameGenres.Genres = GetGenres();
+            return View("Edit", gameGenres);
         }
 
         // POST: Games/Delete/{Id}

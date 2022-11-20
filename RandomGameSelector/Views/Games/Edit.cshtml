@@ -1,22 +1,28 @@
-﻿@model RandomGameSelector.Models.Game
+﻿@model RandomGameSelector.Models.GameGenres
 
 @{
-    ViewData["Title"] = "Edit - " + Html.DisplayFor(modelItem => modelItem.Name);
+    if(Model.Game != null){
+        ViewData["Title"] = "Edit - " + Model.Game.Name;
+    <h1>Edit</h1>
+    }
+    else {
+        ViewData["Title"] = "Create";
+    <h1>Create</h1>
+    }
+    
 }
 
-<h1>Edit</h1>
-
-<h4>@Html.DisplayFor(modelItem => modelItem.Name)</h4>
+<h4>@Html.DisplayFor(modelItem => modelItem.Game.Name)</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="Game.Id" />
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />       
-                <span asp-validation-for="Name" class="text-danger"></span>
+                <label asp-for="Game.Name" class="control-label"></label>
+                <input asp-for="Game.Name" class="form-control" />       
+                <span asp-validation-for="Game.Name" class="text-danger"></span>
 
                 <label id="GenresList">Genres List</label>
 
@@ -24,7 +30,9 @@
 
                 <label id="Genres" class="control-label">Genres</label>
                 <select id="GenresInput" class="form-control">
-
+                    @foreach(Genre genre in Model.Genres){
+                        <option value="@genre.Name">@genre.Name</option>
+                    }
                 </select>
             </div>
             <br />
@@ -36,7 +44,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="ListPage">Back to List</a>
 </div>
 
 @section Scripts {

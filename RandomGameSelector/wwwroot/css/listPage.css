@@ -1,3 +1,7 @@
 ﻿.listTable {
     table-layout: fixed;
 }
+
+.links {
+    display: flex;
+}
