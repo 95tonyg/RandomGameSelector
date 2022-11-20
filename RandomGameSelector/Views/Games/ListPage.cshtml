@@ -1,0 +1,46 @@
+﻿@model RandomGameSelector.Models.ListPage
+
+@{
+    ViewData["Title"] = "Random Game Selector";
+}
+
+<link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
+
+<h1>Index</h1>
+
+
+<table class="table listTable">
+    <thead>
+        <tr>
+            <th>
+                Games<!--Html.DisplayNameFor(model => model.Games.Name)-->
+            </th>
+            <th>
+                Genres
+            </th>
+            <th>
+                Options
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Games) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<br />
+<p>
+    <a asp-action="Create">Add another game</a>
+</p>
