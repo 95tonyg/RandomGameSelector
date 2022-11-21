@@ -16,5 +16,7 @@ namespace RandomGameSelector.Data
 
         public DbSet<RandomGameSelector.Models.Game> Game { get; set; } = default!;
         public DbSet<RandomGameSelector.Models.Genre> Genre { get; set; } = default!;
+
+        public DbSet<RandomGameSelector.Models.GameGenre> GameGenre { get; set; } = default!;
     }
 }

@@ -21,19 +21,17 @@
             <input type="hidden" asp-for="Game.Id" />
             <div class="form-group">
                 <label asp-for="Game.Name" class="control-label"></label>
-                <input asp-for="Game.Name" class="form-control" />       
+                <input asp-for="Game.Name" name="name" class="form-control" />       
                 <span asp-validation-for="Game.Name" class="text-danger"></span>
-
-                <label id="GenresList">Genres List</label>
-
                 <br />
-
                 <label id="Genres" class="control-label">Genres</label>
-                <select id="GenresInput" class="form-control">
-                    @foreach(Genre genre in Model.Genres){
-                        <option value="@genre.Name">@genre.Name</option>
+                <br />
+                <fieldset>
+                    @foreach (Genre genre in Model.AllGenres)
+                    {
+                        <input type="checkbox" value="@genre.Id" name="genres">@genre.Name<br />
                     }
-                </select>
+                </fieldset>
             </div>
             <br />
             <div class="form-group">

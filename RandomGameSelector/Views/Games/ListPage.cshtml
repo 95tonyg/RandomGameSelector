@@ -24,17 +24,17 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Games) {
-        <tr>
+        @for(int i=0; i<Model.Games.Count(); i++) {
+            <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
+                @Html.DisplayFor(modelItem => Model.Games[i].Name)
             </td>
             <td>
-
+                @Model.GameGenres[i]
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> 
+                <a asp-action="Edit" asp-route-id="@Model.Games[i].Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@Model.Games[i].Id">Details</a>
             </td>
         </tr>
 }

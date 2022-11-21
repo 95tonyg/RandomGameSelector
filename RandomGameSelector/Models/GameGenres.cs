@@ -4,6 +4,8 @@
     {
         public Game? Game { get; set; }
 
-        public List<Genre>? Genres { get; set; }
+        public List<Genre>? AllGenres { get; set; }
+
+        public List<int>? MatchedGenreIds { get; set; }
     }
 }
