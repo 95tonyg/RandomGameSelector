@@ -1,6 +1,6 @@
 ﻿namespace RandomGameSelector.Models
 {
-    public class GameGenres
+    public class GameEditViewModel
     {
         public Game? Game { get; set; }
 

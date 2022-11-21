@@ -24,6 +24,12 @@ namespace RandomGameSelector.Controllers
             return _context.Genre.ToList();
         }
 
+        public async Task<IActionResult> GenresListPage()
+        {
+
+            return View(await _context.Genre.ToListAsync());
+        }
+
         // GET: Games
         public async Task<IActionResult> ListPage()
         {
@@ -46,7 +52,7 @@ namespace RandomGameSelector.Controllers
                 }
                 if(genreString.Count > 0)
                 {
-                    listPage.GameGenres.Add(string.Join(",", genreString));
+                    listPage.GameGenres.Add(string.Join(", ", genreString));
                 }
                 else
                 {
@@ -54,7 +60,7 @@ namespace RandomGameSelector.Controllers
                 }
             }
 
-            return View(listPage);
+            return View("ListGamesPage", listPage);
         }
 
         // GET: Games/Details/{Id}
@@ -78,7 +84,7 @@ namespace RandomGameSelector.Controllers
         // GET: Games/Edit
         public IActionResult Create()
         {
-            GameGenres gameGenres = new GameGenres();
+            GameEditViewModel gameGenres = new GameEditViewModel();
             gameGenres.AllGenres = GetGenres();
             return View("Edit", gameGenres);
         }
@@ -99,7 +105,7 @@ namespace RandomGameSelector.Controllers
             {
                 _context.Add(genre);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(ListPage));
+                return RedirectToAction(nameof(GenresListPage));
             }
             return View(genre);
         }
@@ -118,9 +124,10 @@ namespace RandomGameSelector.Controllers
                 return NotFound();
             }
 
-            GameGenres gameGenres = new GameGenres();
+            GameEditViewModel gameGenres = new GameEditViewModel();
             gameGenres.Game = game;
             gameGenres.AllGenres = GetGenres();
+            gameGenres.MatchedGenreIds = _context.GameGenre.Where(x => x.GameId == id).Select(x => x.GenreId).ToList();
 
             return View(gameGenres);
         }
@@ -146,6 +153,7 @@ namespace RandomGameSelector.Controllers
                 try
                 {
                     _context.Update(game);
+                    await _context.SaveChangesAsync();
                     UpdateGameGenres(game.Id, genres);
                     await _context.SaveChangesAsync();
                 }
@@ -166,9 +174,11 @@ namespace RandomGameSelector.Controllers
             {
                 _context.Add(game);
                 await _context.SaveChangesAsync();
+                UpdateGameGenres(game.Id, genres);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(ListPage));
             }
-            GameGenres gameGenres = new GameGenres();
+            GameEditViewModel gameGenres = new GameEditViewModel();
             gameGenres.Game = game;
             gameGenres.AllGenres = GetGenres();
             return View(gameGenres);
@@ -189,7 +199,7 @@ namespace RandomGameSelector.Controllers
                 return NotFound();
             }
 
-            GameGenres gameGenres = new GameGenres();
+            GameEditViewModel gameGenres = new GameEditViewModel();
             gameGenres.Game = game;
             gameGenres.AllGenres = GetGenres();
             return View("Edit", gameGenres);

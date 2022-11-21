@@ -5,3 +5,7 @@
 .links {
     display: flex;
 }
+
+.links > a{
+    flex: 1;
+}

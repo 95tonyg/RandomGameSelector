@@ -1,4 +1,4 @@
-﻿@model RandomGameSelector.Models.GameGenres
+﻿@model RandomGameSelector.Models.GameEditViewModel
 
 @{
     if(Model.Game != null){
@@ -29,7 +29,16 @@
                 <fieldset>
                     @foreach (Genre genre in Model.AllGenres)
                     {
-                        <input type="checkbox" value="@genre.Id" name="genres">@genre.Name<br />
+                        if (Model.MatchedGenreIds != null && Model.MatchedGenreIds.Where(x => x == genre.Id).ToList().Count() > 0)
+                        {
+                            <input type="checkbox" value="@genre.Id" name="genres" checked>@genre.Name
+                            <br />
+                        }
+                        else {
+                            <input type="checkbox" value="@genre.Id" name="genres">@genre.Name
+                            <br />
+                        }
+                        
                     }
                 </fieldset>
             </div>
