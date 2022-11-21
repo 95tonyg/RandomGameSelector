@@ -78,7 +78,31 @@ namespace RandomGameSelector.Controllers
                 return NotFound();
             }
 
-            return View(game);
+            GameDetailModel gameDetail = new GameDetailModel();
+
+            List<GameGenre> gameGenres = await _context.GameGenre.ToListAsync();
+            List<int> genreIds = gameGenres.Where(x => x.GameId == game.Id).Select(x => x.GenreId).ToList();
+            List<string> genreString = new List<string>();
+            foreach (var genre in await _context.Genre.ToListAsync())
+            {
+                if (genreIds.Contains(genre.Id))
+                {
+                    genreString.Add(genre.Name);
+                }
+            }
+            if (genreString.Count > 0)
+            {
+                gameDetail.Genres = string.Join(", ", genreString);
+            }
+            else
+            {
+                gameDetail.Genres = "";
+            }
+
+            gameDetail.Id = game.Id;
+            gameDetail.Name = game.Name;
+
+            return View(gameDetail);
         }
 
         // GET: Games/Edit
@@ -224,12 +248,17 @@ namespace RandomGameSelector.Controllers
             return RedirectToAction(nameof(ListPage));
         }
 
+        public async Task<IActionResult> SelectRandomGame(string games)
+        {
+            return RedirectToAction(nameof(ListPage));
+        }
+
         private bool GameExists(int id)
         {
           return _context.Game.Any(e => e.Id == id);
         }
 
-        private async void UpdateGameGenres(int gameId, int[] gameGenreIds)
+        private void UpdateGameGenres(int gameId, int[] gameGenreIds)
         {
             List<GameGenre> matchedGameGenres = _context.GameGenre.Where(x => x.GameId == gameId).ToList();
 

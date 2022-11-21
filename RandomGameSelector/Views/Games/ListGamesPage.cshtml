@@ -13,7 +13,7 @@
     <thead>
         <tr>
             <th>
-                Games<!--Html.DisplayNameFor(model => model.Games.Name)-->
+                Games
             </th>
             <th>
                 Genres
@@ -24,25 +24,32 @@
         </tr>
     </thead>
     <tbody>
-        @for(int i=0; i<Model.Games.Count(); i++) {
+        @for (int i = 0; i < Model.Games.Count(); i++) {
             <tr>
-            <td>
-                @Html.DisplayFor(modelItem => Model.Games[i].Name)
-            </td>
-            <td>
-                @Model.GameGenres[i]
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@Model.Games[i].Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@Model.Games[i].Id">Details</a>
-            </td>
-        </tr>
-}
+                <td>
+                    @Html.DisplayFor(modelItem => Model.Games[i].Name)
+                </td>
+                <td>
+                    @Model.GameGenres[i]
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@Model.Games[i].Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@Model.Games[i].Id">Details</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
 <br />
-<p class="links">
-    <a style="flex: 1" asp-action="Create">Add another game</a>
-    <a asp-action="SelectRandomGame">Select Random Game to Play</a>
-    <a asp-action="CreateGenre">Add genres</a>
-</p>
+<div class="links">
+    <div>
+        <input class="btn btn-primary" type="button" value="Add Game" onclick="location.href='@Url.Action("Create", "Games")'" />
+    </div>
+    <div>
+        @Html.ActionLink("Select Random Game to Play", "Details", "Games", new { Model.Games[new Random().Next(Model.Games.Count)].Id}, new { @class="btn btn-primary" })
+    </div>
+    <div>
+        <input class="btn btn-primary" type="button" value="Add Genre" onclick="location.href='@Url.Action("CreateGenre", "Games")'" />
+    </div>   
+</div>
+
