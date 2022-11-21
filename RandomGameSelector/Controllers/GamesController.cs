@@ -19,17 +19,29 @@ namespace RandomGameSelector.Controllers
             _context = context;
         }
 
+        /// <summary>
+        /// Gets all genres from the DB
+        /// </summary>
+        /// <returns></returns>
         private List<Genre> GetGenres()
         {
             return _context.Genre.ToList();
         }
 
+        /// <summary>
+        /// Opens the Genres List Page
+        /// </summary>
+        /// <returns></returns>
         public async Task<IActionResult> GenresListPage()
         {
 
             return View(await _context.Genre.ToListAsync());
         }
 
+        /// <summary>
+        /// Opens the Games List Page, has to get all the Genres and GameGenres for display.
+        /// </summary>
+        /// <returns></returns>
         // GET: Games
         public async Task<IActionResult> ListPage()
         {
@@ -39,10 +51,13 @@ namespace RandomGameSelector.Controllers
             listPage.GameGenres = new List<string>();
             List <GameGenre> gameGenres = await _context.GameGenre.ToListAsync();
 
+            //Going through each game so we can find which genres they are matched to.
             foreach (var game in listPage.Games)
             {
+                //Grabbing all rows from pivot table using games Id
                 List<int> genreIds = gameGenres.Where(x => x.GameId == game.Id).Select(x => x.GenreId).ToList();
                 List<string> genreString = new List<string>();
+                //Using the rows from the pivot table, grabbing all the matching genres and putting them into a string
                 foreach(var genre in listPage.Genres)
                 {
                     if (genreIds.Contains(genre.Id))
@@ -80,9 +95,12 @@ namespace RandomGameSelector.Controllers
 
             GameDetailModel gameDetail = new GameDetailModel();
 
+            //Grabbing the genre data for a single job
+            //Grabbing all rows from pivot table using games Id
             List<GameGenre> gameGenres = await _context.GameGenre.ToListAsync();
             List<int> genreIds = gameGenres.Where(x => x.GameId == game.Id).Select(x => x.GenreId).ToList();
             List<string> genreString = new List<string>();
+            //Using the rows from the pivot table, grabbing all the matching genres and putting them into a string
             foreach (var genre in await _context.Genre.ToListAsync())
             {
                 if (genreIds.Contains(genre.Id))
@@ -105,6 +123,10 @@ namespace RandomGameSelector.Controllers
             return View(gameDetail);
         }
 
+        /// <summary>
+        /// Opens the edit game page with an empty item. This allows the page to dispaly as a create page.
+        /// </summary>
+        /// <returns></returns>
         // GET: Games/Edit
         public IActionResult Create()
         {
@@ -134,6 +156,22 @@ namespace RandomGameSelector.Controllers
             return View(genre);
         }
 
+        public async Task<IActionResult> EditGenre(int? id)
+        {
+            if (id == null || _context.Genre == null)
+            {
+                return NotFound();
+            }
+
+            var genre = await _context.Genre.FindAsync(id);
+            if (genre == null)
+            {
+                return NotFound();
+            }
+
+            return View(genre);
+        }
+
         // GET: Games/Edit/{Id}
         public async Task<IActionResult> Edit(int? id)
         {
@@ -155,7 +193,13 @@ namespace RandomGameSelector.Controllers
 
             return View(gameGenres);
         }
-
+        /// <summary>
+        /// Creates and edits games.
+        /// </summary>
+        /// <param name="id">Game Id, if creating a Game then it is 0</param>
+        /// <param name="name">Game Name</param>
+        /// <param name="genres">Genre Ids that have been selected for this game</param>
+        /// <returns></returns>
         // POST: Games/Edit/{Id}
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -172,6 +216,7 @@ namespace RandomGameSelector.Controllers
                 return NotFound();
             }
 
+            //If the ModelState is valid, then we update the game.
             if (ModelState.IsValid)
             {
                 try
@@ -194,6 +239,8 @@ namespace RandomGameSelector.Controllers
                 }
                 return RedirectToAction(nameof(ListPage));
             }
+            //If the ModelState is not valid, and we have an id of 0 and a non null name, we create
+            //a new Game.
             else if(id == 0 && game.Name != null)
             {
                 _context.Add(game);
@@ -208,48 +255,62 @@ namespace RandomGameSelector.Controllers
             return View(gameGenres);
         }
 
-        // GET: Games/Delete/{Id}
-        public async Task<IActionResult> Delete(int? id)
+        /// <summary>
+        /// Passed in either a gameId or genreId. This function is called when a game is being deleted.
+        /// since the GameGenre table has foreign keys, we need to delete any records that contain a key 
+        /// that is being deleted.
+        /// </summary>
+        /// <param name="gameId">If a game has been deleted. A gameId is passed in</param>
+        /// <param name="genreId">If a genre has been deleted. A genreId is passed in</param>
+        private void RemoveGameGenreMappings(int? gameId, int? genreId)
         {
-            if (id == null || _context.Game == null)
+            if(gameId != null)
             {
-                return NotFound();
+                _context.GameGenre.RemoveRange(_context.GameGenre.Where(x=> x.GameId == gameId));
             }
-
-            var game = await _context.Game
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (game == null)
+            else
             {
-                return NotFound();
+                _context.GameGenre.RemoveRange(_context.GameGenre.Where(x => x.GenreId == genreId));
             }
-
-            GameEditViewModel gameGenres = new GameEditViewModel();
-            gameGenres.Game = game;
-            gameGenres.AllGenres = GetGenres();
-            return View("Edit", gameGenres);
         }
 
-        // POST: Games/Delete/{Id}
-        [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("DeleteGenre")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteGenre(int? id)
         {
-            if (_context.Game == null)
+            if (_context.Genre == null)
             {
-                return Problem("Entity set 'RandomGameSelectorContext.Game'  is null.");
+                return Problem("Entity set 'RandomGameSelectorContext.Genre'  is null.");
             }
-            var game = await _context.Game.FindAsync(id);
-            if (game != null)
+            var genre = await _context.Genre.FindAsync(id);
+            if (genre != null)
             {
-                _context.Game.Remove(game);
+                RemoveGameGenreMappings(null, id);
+                await _context.SaveChangesAsync();
+                _context.Genre.Remove(genre);
             }
-            
+          
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(ListPage));
+            return RedirectToAction(nameof(GenresListPage));
         }
 
-        public async Task<IActionResult> SelectRandomGame(string games)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteGame(int id)
         {
+             if (_context.Game == null)
+             {
+                 return Problem("Entity set 'RandomGameSelectorContext.Game'  is null.");
+             }
+             var game = await _context.Game.FindAsync(id);
+             if (game != null)
+             {
+                RemoveGameGenreMappings(id, null);
+                await _context.SaveChangesAsync();
+                _context.Game.Remove(game);
+             }
+             
+             await _context.SaveChangesAsync(); 
             return RedirectToAction(nameof(ListPage));
         }
 
@@ -258,6 +319,11 @@ namespace RandomGameSelector.Controllers
           return _context.Game.Any(e => e.Id == id);
         }
 
+        /// <summary>
+        /// Adds GameGenre relationships to the GameGenre table.
+        /// </summary>
+        /// <param name="gameId">The Id of the New/Updated Game</param>
+        /// <param name="gameGenreIds">The Ids of the Genres</param>
         private void UpdateGameGenres(int gameId, int[] gameGenreIds)
         {
             List<GameGenre> matchedGameGenres = _context.GameGenre.Where(x => x.GameId == gameId).ToList();
@@ -284,11 +350,6 @@ namespace RandomGameSelector.Controllers
                     _context.GameGenre.Remove(gameGenre);
                 }
             }
-        }
-
-        private List<GameGenre> GetGameGenres(int gameId)
-        {
-            return _context.GameGenre.Where(x => x.GameId == gameId).ToList(); 
         }
     }
 }
