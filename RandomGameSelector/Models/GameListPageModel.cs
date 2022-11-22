@@ -1,6 +1,6 @@
 ﻿namespace RandomGameSelector.Models
 {
-    public class ListPage
+    public class GameListPageModel
     {
         public List<Game>? Games { get; set; }
 

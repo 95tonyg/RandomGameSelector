@@ -1,4 +1,4 @@
-﻿@model RandomGameSelector.Models.ListPage
+﻿@model RandomGameSelector.Models.GameListPageModel
 
 @{
     ViewData["Title"] = "Random Game Selector";
@@ -49,7 +49,7 @@
         @Html.ActionLink("Select Random Game to Play", "Details", "Games", new { Model.Games[new Random().Next(Model.Games.Count)].Id}, new { @class="btn btn-primary" })
     </div>
     <div>
-        <input class="btn btn-primary" type="button" value="Add Genre" onclick="location.href='@Url.Action("CreateGenre", "Games")'" />
+        <input class="btn btn-primary" type="button" value="Add Genre" onclick="location.href='@Url.Action("Create", "Genres")'" />
     </div>   
 </div>
 

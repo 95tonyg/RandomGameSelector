@@ -23,7 +23,7 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td style="text-align:end">
-                <a asp-action="EditGenre" asp-route-id="@item.Id">Edit</a> 
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> 
             </td>
         </tr>
 }
@@ -31,5 +31,5 @@
 </table>
 
 <p>
-    <a asp-action="CreateGenre" class="btn btn-primary">Add Genre</a>
+    <a asp-action="Create" class="btn btn-primary">Add Genre</a>
 </p>
