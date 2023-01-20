@@ -26,19 +26,13 @@ namespace RandomGameSelector.Controllers
             return _context.Genre.ToList();
         }
         
-
-        /// <summary>
-        /// Opens the Games List Page, has to get all the Genres and GameGenres for display.
-        /// </summary>
-        /// <returns></returns>
-        // GET: Games
-        public async Task<IActionResult> ListPage()
+        private async Task<GameListPageModel> GetGamesList()
         {
             GameListPageModel listPage = new GameListPageModel();
             listPage.Games = await _context.Game.ToListAsync();
             listPage.Genres = await _context.Genre.ToListAsync();
             listPage.GameGenres = new List<string>();
-            List <GameGenre> gameGenres = await _context.GameGenre.ToListAsync();
+            List<GameGenre> gameGenres = await _context.GameGenre.ToListAsync();
 
             //Going through each game so we can find which genres they are matched to.
             foreach (var game in listPage.Games)
@@ -47,14 +41,14 @@ namespace RandomGameSelector.Controllers
                 List<int> genreIds = gameGenres.Where(x => x.GameId == game.Id).Select(x => x.GenreId).ToList();
                 List<string> genreString = new List<string>();
                 //Using the rows from the pivot table, grabbing all the matching genres and putting them into a string
-                foreach(var genre in listPage.Genres)
+                foreach (var genre in listPage.Genres)
                 {
                     if (genreIds.Contains(genre.Id))
                     {
                         genreString.Add(genre.Name);
                     }
                 }
-                if(genreString.Count > 0)
+                if (genreString.Count > 0)
                 {
                     listPage.GameGenres.Add(string.Join(", ", genreString));
                 }
@@ -63,6 +57,18 @@ namespace RandomGameSelector.Controllers
                     listPage.GameGenres.Add("");
                 }
             }
+            
+            return listPage;
+        }
+
+        /// <summary>
+        /// Opens the Games List Page, has to get all the Genres and GameGenres for display.
+        /// </summary>
+        /// <returns></returns>
+        // GET: Games
+        public async Task<IActionResult> ListPage()
+        {
+            GameListPageModel listPage = await GetGamesList();
 
             return View("List", listPage);
         }
@@ -263,6 +269,18 @@ namespace RandomGameSelector.Controllers
                     _context.GameGenre.Remove(gameGenre);
                 }
             }
+        }
+
+        public async Task<IActionResult> Index(string searchString)
+        {
+            GameListPageModel listPage = await GetGamesList();
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                listPage.Games = (List<Game>?)listPage.Games.Where(g => g.Name.ToLower()!.Contains(searchString.ToLower())).ToList();
+            }
+
+            return View("List", listPage);
         }
     }
 }

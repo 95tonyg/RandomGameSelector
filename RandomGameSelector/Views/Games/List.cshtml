@@ -8,6 +8,12 @@
 
 <h1>Games</h1>
 
+<form asp-controller="Games" asp-action="Index">
+    <p>
+        Title: <input type="text" name="SearchString" />
+        <input type="submit" value="Filter" />
+    </p>
+</form>
 
 <table class="table listTable">
     <thead>
@@ -45,9 +51,11 @@
     <div>
         <input class="btn btn-primary" type="button" value="Add Game" onclick="location.href='@Url.Action("Create", "Games")'" />
     </div>
-    <div>
-        @Html.ActionLink("Select Random Game to Play", "Details", "Games", new { Model.Games[new Random().Next(Model.Games.Count)].Id}, new { @class="btn btn-primary" })
-    </div>
+    @if(Model.Games.Count() > 0){
+        <div>
+            @Html.ActionLink("Select Random Game to Play", "Details", "Games", new { Model.Games[new Random().Next(Model.Games.Count)].Id}, new { @class="btn btn-primary" })
+        </div>
+    }
     <div>
         <input class="btn btn-primary" type="button" value="Add Genre" onclick="location.href='@Url.Action("Create", "Genres")'" />
     </div>   
