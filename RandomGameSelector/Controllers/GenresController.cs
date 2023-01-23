@@ -82,5 +82,17 @@ namespace RandomGameSelector.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(ListPage));
         }
+
+        public async Task<IActionResult> Index(string searchString)
+        {
+            var genres = await _context.Genre.ToListAsync();
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                genres = genres.Where(g => g.Name.ToLower()!.Contains(searchString.ToLower())).ToList();
+            }
+
+            return View("List", genres);
+        }
     }
 }
