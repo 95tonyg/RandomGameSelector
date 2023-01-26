@@ -272,9 +272,43 @@ namespace RandomGameSelector.Controllers
             }
         }
 
-        public async Task<IActionResult> Index(string searchString)
+        public async Task<IActionResult> Index(string searchString, List<int>? selectedGenres)
         {
             GameListPageModel listPage = await GetGamesList();
+
+            if (selectedGenres != null && selectedGenres.Count() > 0)
+            {
+                List<GameGenre> gameGenres = await _context.GameGenre.ToListAsync();
+                List<Game> gamesToRemove = new List<Game>();
+                gameGenres = gameGenres.Where(g => selectedGenres.Contains(g.GenreId)).ToList();
+                foreach(Game game in listPage.Games)
+                {
+                    bool removeFlag = true;
+                    foreach(GameGenre gameGenre in gameGenres)
+                    {
+                        if(gameGenre.GameId == game.Id)
+                        {
+                            removeFlag = false;
+                        }
+                    }
+
+                    if (removeFlag)
+                    {
+                        gamesToRemove.Add(game);
+                    }
+                }
+
+                if(gamesToRemove.Count > 0)
+                {
+                    foreach(Game game in gamesToRemove)
+                    {
+                        listPage.Games.Remove(game);
+                    }
+                }
+            }
+
+            //TODO need to fix the genres that are shown next to the games on the list since they are not updated.
+            //TODO Need to have the filtered genres be preselected after filter is selected.
 
             if (!String.IsNullOrEmpty(searchString))
             {

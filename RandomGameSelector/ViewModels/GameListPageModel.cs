@@ -9,5 +9,7 @@ namespace RandomGameSelector.ViewModels
         public List<Genre>? Genres { get; set; }
 
         public List<string>? GameGenres { get; set; }
+
+        public List<int>? SelectedGenres { get; set; }
     }
 }

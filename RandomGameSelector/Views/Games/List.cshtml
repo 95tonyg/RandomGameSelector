@@ -12,6 +12,12 @@
 <form asp-controller="Games" asp-action="Index">
     <p>
         Title: <input type="text" name="SearchString" />
+        <select name="SelectedGenres" multiple>
+            @foreach (Genre genre in Model.Genres)
+            {
+                <option value="@genre.Id">@genre.Name</option>
+            }
+        </select>
         <input type="submit" value="Filter" />
     </p>
 </form>
