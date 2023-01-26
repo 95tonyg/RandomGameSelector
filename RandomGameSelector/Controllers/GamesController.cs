@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RandomGameSelector.Data;
 using RandomGameSelector.Models;
+using RandomGameSelector.ViewModels;
 
 namespace RandomGameSelector.Controllers
 {

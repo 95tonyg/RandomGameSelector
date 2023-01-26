@@ -1,4 +1,4 @@
-namespace RandomGameSelector.Models
+namespace RandomGameSelector.ViewModels
 {
     public class ErrorViewModel
     {

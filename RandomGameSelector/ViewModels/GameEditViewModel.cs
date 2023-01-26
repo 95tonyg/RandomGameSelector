@@ -1,4 +1,6 @@
-﻿namespace RandomGameSelector.Models
+﻿using RandomGameSelector.Models;
+
+namespace RandomGameSelector.ViewModels
 {
     public class GameEditViewModel
     {
