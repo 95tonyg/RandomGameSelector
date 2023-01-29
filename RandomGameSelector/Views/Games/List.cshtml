@@ -43,7 +43,7 @@
                     @Html.DisplayFor(modelItem => Model.Games[i].Name)
                 </td>
                 <td>
-                    @Model.GameGenres[i]
+                    @Model.GameGenres[Model.Games[i].Id]
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@Model.Games[i].Id">Edit</a> |

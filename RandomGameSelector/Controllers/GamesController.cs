@@ -32,7 +32,8 @@ namespace RandomGameSelector.Controllers
             GameListPageModel listPage = new GameListPageModel();
             listPage.Games = await _context.Game.ToListAsync();
             listPage.Genres = await _context.Genre.ToListAsync();
-            listPage.GameGenres = new List<string>();
+            listPage.GameGenres = new Dictionary<int, string>();
+
             List<GameGenre> gameGenres = await _context.GameGenre.ToListAsync();
 
             //Going through each game so we can find which genres they are matched to.
@@ -51,11 +52,11 @@ namespace RandomGameSelector.Controllers
                 }
                 if (genreString.Count > 0)
                 {
-                    listPage.GameGenres.Add(string.Join(", ", genreString));
+                    listPage.GameGenres.Add(game.Id ,string.Join(", ", genreString));
                 }
                 else
                 {
-                    listPage.GameGenres.Add("");
+                    listPage.GameGenres.Add(game.Id, "");
                 }
             }
             
@@ -307,7 +308,6 @@ namespace RandomGameSelector.Controllers
                 }
             }
 
-            //TODO need to fix the genres that are shown next to the games on the list since they are not updated.
             //TODO Need to have the filtered genres be preselected after filter is selected.
 
             if (!String.IsNullOrEmpty(searchString))
