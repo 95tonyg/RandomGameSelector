@@ -308,12 +308,13 @@ namespace RandomGameSelector.Controllers
                 }
             }
 
-            //TODO Need to have the filtered genres be preselected after filter is selected.
-
             if (!String.IsNullOrEmpty(searchString))
             {
                 listPage.Games = (List<Game>?)listPage.Games.Where(g => g.Name.ToLower()!.Contains(searchString.ToLower())).ToList();
             }
+
+            ViewData["SelectedOptions"] = selectedGenres;
+            ViewData["SearchString"] = searchString;
 
             return View("List", listPage);
         }

@@ -11,11 +11,20 @@
 
 <form asp-controller="Games" asp-action="Index">
     <p>
-        Title: <input type="text" name="SearchString" />
+        Title: <input type="text" name="SearchString" value=@ViewData["SearchString"] != null ? @ViewData["SearchString"] : "" />
         <select name="SelectedGenres" multiple>
-            @foreach (Genre genre in Model.Genres)
-            {
-                <option value="@genre.Id">@genre.Name</option>
+            @{
+                List<int> selectedOptions = ViewData["SelectedOptions"] != null ? ViewData["SelectedOptions"] as List<int> : new List<int>();
+                foreach (Genre genre in Model.Genres)
+                {
+                    if (selectedOptions.Contains(genre.Id))
+                    {
+                        <option value="@genre.Id" selected>@genre.Name</option>
+                    }
+                    else {
+                        <option value="@genre.Id">@genre.Name</option>
+                    }
+                }
             }
         </select>
         <input type="submit" value="Filter" />
