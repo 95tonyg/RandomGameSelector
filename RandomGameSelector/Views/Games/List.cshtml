@@ -67,9 +67,9 @@
     <div>
         <input class="btn btn-primary" type="button" value="Add Game" onclick="location.href='@Url.Action("Create", "Games")'" />
     </div>
-    @if(Model.Games.Count() > 0){
+    @if (Model.Games.Count() > 0) {
         <div>
-            @Html.ActionLink("Select Random Game to Play", "Details", "Games", new { Model.Games[new Random().Next(Model.Games.Count)].Id}, new { @class="btn btn-primary" })
+            @Html.ActionLink("Select Random Game to Play", "RandomGameSelector", "Games", new {gameIds = Model.Games.Select(game => game.Id).ToList()}, new { @class="btn btn-primary" })
         </div>
     }
     <div>

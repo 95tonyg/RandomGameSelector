@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol;
 using RandomGameSelector.Data;
 using RandomGameSelector.Models;
 using RandomGameSelector.ViewModels;
@@ -75,6 +76,11 @@ namespace RandomGameSelector.Controllers
             return View("List", listPage);
         }
 
+        public async Task<IActionResult> RandomGameSelector([FromQuery] List<int> gameIds)
+        {
+            return RedirectToAction(nameof(Details), new { id = gameIds[new Random().Next(gameIds.Count)] });
+        }
+
         // GET: Games/Details/{Id}
         public async Task<IActionResult> Details(int? id)
         {
@@ -83,8 +89,7 @@ namespace RandomGameSelector.Controllers
                 return NotFound();
             }
 
-            var game = await _context.Game
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var game = await _context.Game.FirstOrDefaultAsync(m => m.Id == id);
             if (game == null)
             {
                 return NotFound();
