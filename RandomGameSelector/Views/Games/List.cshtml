@@ -10,25 +10,33 @@
 <h1>Games</h1>
 
 <form asp-controller="Games" asp-action="Index">
-    <p>
+    <div>
         Title: <input type="text" name="SearchString" value=@ViewData["SearchString"] != null ? @ViewData["SearchString"] : "" />
-        <select name="SelectedGenres" multiple>
+
+        <div class="genreGroup">
             @{
                 List<int> selectedOptions = ViewData["SelectedOptions"] != null ? ViewData["SelectedOptions"] as List<int> : new List<int>();
                 foreach (Genre genre in Model.Genres)
                 {
                     if (selectedOptions.Contains(genre.Id))
                     {
-                        <option value="@genre.Id" selected>@genre.Name</option>
+                        <div class="checkbox">
+                            <input type="checkbox" value="@genre.Id" checked name="selectedGenres">
+                            <span>@genre.Name</span>
+                        </div>
                     }
                     else {
-                        <option value="@genre.Id">@genre.Name</option>
+                        <div class="checkbox">
+                            <input type="checkbox" value="@genre.Id" name="selectedGenres">
+                            <span>@genre.Name</span>
+                        </div>
                     }
                 }
             }
-        </select>
+        </div>
+           
         <input type="submit" value="Filter" />
-    </p>
+    </div>
 </form>
 
 <table class="table listTable">

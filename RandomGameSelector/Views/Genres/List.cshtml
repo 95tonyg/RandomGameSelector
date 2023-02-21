@@ -8,7 +8,7 @@
 
 <form asp-controller="Genres" asp-action="Index">
     <p>
-        Genre: <input type="text" name="SearchString" />
+        Genre: <input type="text" name="SearchString" value=@ViewData["SearchString"] !=null ? @ViewData["SearchString"] : "" />
         <input type="submit" value="Filter" />
     </p>
 </form>

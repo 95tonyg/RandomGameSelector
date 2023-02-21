@@ -93,6 +93,8 @@ namespace RandomGameSelector.Controllers
                 genres = genres.Where(g => g.Name.ToLower()!.Contains(searchString.ToLower())).ToList();
             }
 
+            ViewData["SearchString"] = searchString;
+
             return View("List", genres);
         }
     }
