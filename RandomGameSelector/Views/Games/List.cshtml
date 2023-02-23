@@ -10,32 +10,40 @@
 <h1>Games</h1>
 
 <form asp-controller="Games" asp-action="Index">
-    <div>
-        Title: <input type="text" name="SearchString" value=@ViewData["SearchString"] != null ? @ViewData["SearchString"] : "" />
+    <div>Title:</div>
 
-        <div class="genreGroup">
-            @{
-                List<int> selectedOptions = ViewData["SelectedOptions"] != null ? ViewData["SelectedOptions"] as List<int> : new List<int>();
-                foreach (Genre genre in Model.Genres)
-                {
-                    if (selectedOptions.Contains(genre.Id))
+    <div class="filterContainer">
+        
+        <div class="filterItem searchContainer">            
+            <input type="text" class="searchFilter" name="SearchString" value=@ViewData["SearchString"] !=null ? @ViewData["SearchString"] : "" />
+        </div>      
+        
+        <div class="genresContainer">
+            <label for="genres" class="genresLabel">Genres</label>
+            <div class="genresCheckboxes" name="genres">
+                @{
+                    List<int> selectedOptions = ViewData["SelectedOptions"] != null ? ViewData["SelectedOptions"] as List<int> : new List<int>();
+                    foreach (Genre genre in Model.Genres)
                     {
-                        <div class="checkbox">
-                            <input type="checkbox" value="@genre.Id" checked name="selectedGenres">
-                            <span>@genre.Name</span>
-                        </div>
-                    }
-                    else {
-                        <div class="checkbox">
-                            <input type="checkbox" value="@genre.Id" name="selectedGenres">
-                            <span>@genre.Name</span>
-                        </div>
+                        if (selectedOptions.Contains(genre.Id))
+                        {
+                            <div class="checkbox">
+                                <input type="checkbox" value="@genre.Id" checked name="selectedGenres">
+                                <span>@genre.Name</span>
+                            </div>
+                        }
+                        else {
+                            <div class="checkbox">
+                                <input type="checkbox" value="@genre.Id" name="selectedGenres">
+                                <span>@genre.Name</span>
+                            </div>
+                        }
                     }
                 }
-            }
-        </div>
+            </div>
+        </div>       
            
-        <input type="submit" value="Filter" />
+        <input type="submit" class="filterButton" value="Filter" />
     </div>
 </form>
 

@@ -9,3 +9,36 @@
 .links > div{
     flex: 1;
 }
+
+.filterContainer {
+    display: flex;
+}
+
+.searchFilter {
+    width: 100%;
+}
+
+.filterItem {
+    flex: 1;
+}
+
+.genresCheckboxes {
+    display: none;
+}
+
+.filterButton {
+    width: 10%;
+}
+
+.searchContainer {
+    padding-right: 20px;
+}
+
+.genresContainer {
+    padding-right: 20px;
+}
+
+.genresLabel{
+    padding: 0 15px 0 15px;
+    border: 1px solid;
+}
