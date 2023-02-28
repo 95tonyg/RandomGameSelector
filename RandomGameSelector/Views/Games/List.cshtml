@@ -27,16 +27,16 @@
                     {
                         if (selectedOptions.Contains(genre.Id))
                         {
-                            <div class="checkbox">
-                                <input type="checkbox" value="@genre.Id" checked name="selectedGenres">
+                            <label class="checkbox" for="Genre-@genre.Id">
+                                <input type="checkbox" value="@genre.Id" checked name="selectedGenres" id="Genre-@genre.Id">
                                 <span>@genre.Name</span>
-                            </div>
+                            </label>
                         }
                         else {
-                            <div class="checkbox">
-                                <input type="checkbox" value="@genre.Id" name="selectedGenres">
+                            <label class="checkbox" for="Genre-@genre.Id">
+                                <input type="checkbox" value="@genre.Id" name="selectedGenres" id="Genre-@genre.Id">
                                 <span>@genre.Name</span>
-                            </div>
+                            </label>
                         }
                     }
                 }
